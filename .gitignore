@@ -9,3 +9,7 @@ contexts/*.local.yml
 
 # Also ignore dependency symlinks used by isolated local validation
 node_modules
+
+# Private benchmark execution and publication state
+benchmark-results/
+benchmarks/dashboard/__pycache__/

@@ -7,3 +7,5 @@ The authored work items represent supported assertions, a UI-only denial check, 
 Metrics distinguish issue detection precision/recall, missed issue rate, false alarm rate and exact finding classification. Raw findings and confidence-routed findings are separate. Failed/unrun expected issues count as missed in end-to-end recall when at least one response exists; coverage is always disclosed. Preview and runs with no evaluated responses yield null metrics. Timing aggregates only evaluated rows; token cost and human review remain null until supported measurements exist. Tests verify denominators, identity integrity and preview behavior.
 
 Validation 2026-10-11: typecheck and local tests passed (31 passed with the local read-only harness adapter configured); CRM preview built 16 requests. Live provider returned HTTP 403 on the first request, so zero checks completed, one errored and 15 were not run. Model accuracy, precision/recall and cost are unavailable; this is a failed research run, not a successful evaluation result.
+
+See [automatic dashboard publication](AUTOMATIC-PUBLICATION.md) for the canonical runner, CI, privacy controls and retry behaviour.

@@ -23,8 +23,10 @@
     "review:decision": "node --import tsx src/workflow-cli.ts decide",
     "report:sample": "node --import tsx src/sample-report.ts",
     "benchmark:crm:preview": "node --import tsx src/workflow-cli.ts preview --input benchmarks/crm-inputs.json",
-    "benchmark:crm:live": "node --import tsx src/workflow-cli.ts benchmark --input benchmarks/crm-inputs.json --gold benchmarks/crm-gold.json",
-    "benchmark:metrics": "node --import tsx src/benchmark-metrics.ts"
+    "benchmark:crm:live": "npm run benchmark",
+    "benchmark:metrics": "node --import tsx src/benchmark-metrics.ts",
+    "benchmark": "python3 benchmarks/dashboard/run.py",
+    "benchmark:publish": "python3 benchmarks/dashboard/publish.py"
   },
   "dependencies": {
     "ai": "7.0.109",

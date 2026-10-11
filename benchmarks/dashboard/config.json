@@ -1,0 +1,44 @@
+{
+  "steps": [
+    [
+      "node",
+      "--import",
+      "tsx",
+      "src/workflow-cli.ts",
+      "benchmark",
+      "--input",
+      "benchmarks/crm-inputs.json",
+      "--gold",
+      "benchmarks/crm-gold.json"
+    ],
+    [
+      "node",
+      "--import",
+      "tsx",
+      "src/benchmark-metrics.ts"
+    ]
+  ],
+  "outputs": [
+    "artifacts/workflow-benchmark.json",
+    "artifacts/crm-benchmark-metrics.json"
+  ],
+  "project": "jev",
+  "expectedCases": [
+    "distinct-boundary:duplication:s1:s2",
+    "distinct-boundary:implementation:ac",
+    "distinct-boundary:planning:ac",
+    "duplicate-denial:duplication:s1:s2",
+    "duplicate-denial:implementation:ac",
+    "duplicate-denial:planning:ac",
+    "hidden-only:implementation:ac",
+    "hidden-only:planning:ac",
+    "missing-export:implementation:ac",
+    "missing-export:planning:ac",
+    "missing-helper:implementation:ac",
+    "missing-helper:planning:ac",
+    "status-only:implementation:ac",
+    "status-only:planning:ac",
+    "viewer-denial:implementation:ac",
+    "viewer-denial:planning:ac"
+  ]
+}

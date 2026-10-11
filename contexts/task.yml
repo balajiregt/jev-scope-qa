@@ -1,0 +1,5 @@
+# Current evaluation task facts; file conventions live in harness.yml.
+name: scope-review-benchmark
+description: Evaluate synthetic scenario coverage with known positive, negative and neutral answers.
+inputs: fixtures/benchmark-inputs.json
+gold: fixtures/gold.json

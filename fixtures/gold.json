@@ -1,0 +1,56 @@
+[
+  {
+    "caseId": "case-01",
+    "criterionId": "AC-1",
+    "verdict": "positive",
+    "rationale": "Correct role, direct navigation, and an explicit denial assertion cover the criterion."
+  },
+  {
+    "caseId": "case-02",
+    "criterionId": "AC-1",
+    "verdict": "positive",
+    "rationale": "The scenario checks the requested page and disabled edit control for the correct role."
+  },
+  {
+    "caseId": "case-03",
+    "criterionId": "AC-1",
+    "verdict": "positive",
+    "rationale": "The required invalid submission and exact expected feedback are present."
+  },
+  {
+    "caseId": "case-04",
+    "criterionId": "AC-1",
+    "verdict": "negative",
+    "rationale": "Disabled navigation does not test direct navigation or the denial page."
+  },
+  {
+    "caseId": "case-05",
+    "criterionId": "AC-1",
+    "verdict": "negative",
+    "rationale": "An admin scenario cannot establish the viewer restriction."
+  },
+  {
+    "caseId": "case-06",
+    "criterionId": "AC-1",
+    "verdict": "negative",
+    "rationale": "The expected successful access contradicts the explicit denial requirement."
+  },
+  {
+    "caseId": "case-07",
+    "criterionId": "AC-1",
+    "verdict": "neutral",
+    "rationale": "Appropriate does not specify whether export should be permitted."
+  },
+  {
+    "caseId": "case-08",
+    "criterionId": "AC-1",
+    "verdict": "neutral",
+    "rationale": "The helper might verify direct denial or only navigation; its behavior is not supplied."
+  },
+  {
+    "caseId": "case-09",
+    "criterionId": "AC-1",
+    "verdict": "neutral",
+    "rationale": "A human must resolve conflicting intent before accepting a coverage decision."
+  }
+]

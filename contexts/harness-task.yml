@@ -1,0 +1,3 @@
+name: existing-harness-review
+description: Review a proposed access criterion against current CRM Playwright evidence.
+inputs: fixtures/harness-inputs.json

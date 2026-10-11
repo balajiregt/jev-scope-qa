@@ -1,0 +1,44 @@
+{
+  "name": "jev-scenario-evaluator",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Two-stage Jev lead review for scenario coverage, duplication and Playwright assertions.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "context:resolve": "node --import tsx src/cli.ts resolve",
+    "eval:preview": "node --import tsx src/cli.ts preview",
+    "eval:benchmark": "node --import tsx src/cli.ts benchmark",
+    "eval:harness:preview": "node --import tsx src/cli.ts preview --task contexts/harness-task.yml",
+    "eval:harness": "node --import tsx src/cli.ts review --task contexts/harness-task.yml",
+    "report:build": "node --import tsx src/build-reports.ts",
+    "report:serve": "python3 -m http.server 8791 --bind 127.0.0.1 --directory artifacts",
+    "review:preview": "node --import tsx src/workflow-cli.ts preview",
+    "review:live": "node --import tsx src/workflow-cli.ts live",
+    "review:benchmark": "node --import tsx src/workflow-cli.ts benchmark",
+    "review:decision": "node --import tsx src/workflow-cli.ts decide",
+    "report:sample": "node --import tsx src/sample-report.ts",
+    "benchmark:crm:preview": "node --import tsx src/workflow-cli.ts preview --input benchmarks/crm-inputs.json",
+    "benchmark:crm:live": "node --import tsx src/workflow-cli.ts benchmark --input benchmarks/crm-inputs.json --gold benchmarks/crm-gold.json",
+    "benchmark:metrics": "node --import tsx src/benchmark-metrics.ts"
+  },
+  "dependencies": {
+    "ai": "7.0.109",
+    "dotenv": "^17.2.3",
+    "yaml": "^2.9.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/balajiregt/jev-scope-qa.git"
+  }
+}

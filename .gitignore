@@ -1,0 +1,11 @@
+node_modules/
+artifacts/
+.env
+.env.*
+!.env.example
+
+contexts/*.local.yml
+.DS_Store
+
+# Also ignore dependency symlinks used by isolated local validation
+node_modules

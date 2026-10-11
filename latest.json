@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "project": "jev",
+  "updatedAt": "2026-10-11T14:50:27.971414+00:00",
+  "run": {
+    "project": "jev",
+    "title": "JEV Review",
+    "repository": "https://github.com/balajiregt/jev-scope-qa",
+    "protocol": "https://github.com/balajiregt/jev-scope-qa/blob/main/benchmarks/README.md",
+    "checks": [
+      {
+        "name": "Source evidence available",
+        "ok": false,
+        "detail": "FileNotFoundError"
+      },
+      {
+        "name": "Evidence matches the fixed benchmark protocol",
+        "ok": false,
+        "detail": "Case identities and counts checked against the versioned synthetic protocol"
+      },
+      {
+        "name": "Evidence belongs to this attempt",
+        "ok": false,
+        "detail": "All required source files were regenerated during this run"
+      }
+    ],
+    "metrics": [],
+    "limitations": [],
+    "cases": [],
+    "status": "unavailable",
+    "integrity": "invalid",
+    "notice": "Current attempt did not produce complete fresh evidence. Previous results remain in history.",
+    "runAt": "2026-10-11T14:46:08.494578+00:00",
+    "timeBasis": "benchmark attempt start",
+    "runId": "07881a25acf2664b",
+    "execution": {
+      "startedAt": "2026-10-11T14:46:08.494578+00:00",
+      "finishedAt": "2026-10-11T14:46:09.396175+00:00",
+      "exitCode": 1,
+      "revision": "637b5cf6b67180f16671dd6c7541b838da25ab80",
+      "dirtySource": true
+    },
+    "revision": "637b5cf6b67180f16671dd6c7541b838da25ab80",
+    "dirtySource": true,
+    "evidence": []
+  },
+  "history": [
+    {
+      "project": "jev",
+      "title": "JEV Review",
+      "repository": "https://github.com/balajiregt/jev-scope-qa",
+      "protocol": "https://github.com/balajiregt/jev-scope-qa/blob/main/benchmarks/README.md",
+      "checks": [
+        {
+          "name": "Source evidence available",
+          "ok": false,
+          "detail": "FileNotFoundError"
+        },
+        {
+          "name": "Evidence matches the fixed benchmark protocol",
+          "ok": false,
+          "detail": "Case identities and counts checked against the versioned synthetic protocol"
+        },
+        {
+          "name": "Evidence belongs to this attempt",
+          "ok": false,
+          "detail": "All required source files were regenerated during this run"
+        }
+      ],
+      "metrics": [],
+      "limitations": [],
+      "cases": [],
+      "status": "unavailable",
+      "integrity": "invalid",
+      "notice": "Current attempt did not produce complete fresh evidence. Previous results remain in history.",
+      "runAt": "2026-10-11T14:46:08.494578+00:00",
+      "timeBasis": "benchmark attempt start",
+      "runId": "07881a25acf2664b",
+      "execution": {
+        "startedAt": "2026-10-11T14:46:08.494578+00:00",
+        "finishedAt": "2026-10-11T14:46:09.396175+00:00",
+        "exitCode": 1,
+        "revision": "637b5cf6b67180f16671dd6c7541b838da25ab80",
+        "dirtySource": true
+      },
+      "revision": "637b5cf6b67180f16671dd6c7541b838da25ab80",
+      "dirtySource": true,
+      "evidence": []
+    }
+  ]
+}

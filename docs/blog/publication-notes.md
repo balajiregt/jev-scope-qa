@@ -5,7 +5,7 @@ Status: article and social post are drafts. Neither has been published by this t
 ## Medium
 
 - Title: The Playwright Test Passed. Did It Test the Requirement?
-- Subtitle: Exploring Jev as an evidence-based review layer for AI-generated scenarios and Playwright assertions.
+- Subtitle: Where Jev fits in an agentic testing framework—and how its JSON becomes a review finding.
 - Article: `medium-article.md`.
 - Suggested tags: Playwright, Test Automation, Quality Engineering, AI, Software Testing.
 - Upload `../assets/review-stages.png` at the image position. Alt text and caption are in the article.
@@ -37,3 +37,11 @@ independently of Medium publication.
 No license is selected by this package. Choose one explicitly if you want to grant
 reuse rights beyond the platform's default terms. The article does not describe
 the repository as licensed open source.
+
+## Updated editorial scope
+
+Both drafts now focus on the framework flow, Jev review boundaries, state versus
+typed questions, Noul/boolean naming, Choice response JSON and local routing.
+JSON response numbers are explicitly illustrative. The September benchmark remains
+a dated observation. Keep the pinned-SDK note in the Medium article; current vendor
+documentation uses a newer function name. Both remain drafts per the author’s request.

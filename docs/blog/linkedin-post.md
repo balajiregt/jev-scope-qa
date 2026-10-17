@@ -1,26 +1,41 @@
-A Playwright test can pass and still miss the acceptance criterion.
+A Playwright test can pass without verifying the acceptance criterion.
 
-Example: “A viewer cannot delete a customer.”
+“Viewers cannot delete customers” is not covered by checking that the Customers heading appears.
 
-The test opens the page, checks that the Customers heading is visible, and goes green. It never verifies access denial or that the customer remains.
+I’m exploring that gap with Jev Scope QA. Here’s where the review layer fits:
 
-That question led me to build Jev Scope QA—an experimental review layer around an agentic Playwright workflow.
+Epic + Jira + MD instructions + existing scenarios
+↓
+Coding agent proposes scenarios
+↓
+Jev: coverage gaps + duplicate candidates
+↓
+Lead agrees the plan → agent writes tests → Playwright runs
+↓
+Jev: required outcomes versus actual assertions
+↓
+Evidence-linked report → lead decision
 
-The idea:
+What goes into Jev?
 
-→ Copilot, Claude or another coding agent generates scenarios from the supplied epic, ticket and team instructions.
-→ Jev reviews scenario coverage and potential duplication.
-→ After implementation, Jev compares the required outcomes with actual test assertions.
-→ A QA lead or principal engineer reviews the evidence and makes the decision.
+State: requirements, scenarios and—for implementation review—test/helper code and supplied run evidence.
+Questions: instructions plus a defined answer type.
 
-In the first revised synthetic benchmark, 13 live Jev checks completed and 11 matched my expected finding labels. It caught the ineffective passing test, a missing role scenario and a duplicate pair. The disagreements and uncertain answers remain visible in the report.
+• Noul: probability of “yes” (called boolean in Vercel’s AI SDK).
+• Choice: a category plus its probabilities.
+• Score: a rating against described, ordered levels.
 
-That is an exploratory result—not a production accuracy claim. The example browser-run records are illustrative; the Jev calls are real.
+This project uses Choice. For example: supported, assertion_gap, ambiguous_scope or insufficient_evidence.
 
-The project includes an offline sample report, so you can inspect the findings without an API key.
+An illustrative JSON answer excerpt:
+{"choice":"assertion_gap","probabilities":{"supported":0.03,"assertion_gap":0.92,"ambiguous_scope":0.02,"insufficient_evidence":0.03}}
 
-Code and examples: https://github.com/balajiregt/jev-scope-qa
+Our code validates the answer. Below 0.80 selected-choice probability goes to human judgment; otherwise, the finding determines the recommendation. Ambiguous scope and missing evidence still need a person. API errors remain errors.
 
-How do you currently check that AI-generated tests verify the requirement, beyond simply passing?
+Jev reviews evidence. The existing harness executes tests. The lead decides—no automatic approvals or test deletion.
+
+Our September synthetic run matched 11 of 13 expected findings. Real Jev calls, illustrative browser-run records, and disagreements preserved. The threshold and results need broader validation.
+
+Code + offline sample report: https://github.com/balajiregt/jev-scope-qa
 
 #Playwright #TestAutomation #QualityEngineering #AgenticAI

@@ -6,14 +6,14 @@ coverage approval or smoke classification.
 16 author-labeled synthetic decisions, two repetitions per provider. The local
 arms completed 64 assessments. Independent human label review is pending.
 
-| Held-out task | Independent cases | Laya exact matches | Qwen exact matches | Laya p50 / p95 | Qwen p50 / p95 |
+| Held-out task | Unique requirements / candidates | Laya exact matches | Qwen exact matches | Laya p50 / p95 | Qwen p50 / p95 |
 |---|---:|---:|---:|---:|---:|
 | Requirement coverage | 4 | 2/8 calls (25%) | 2/8 calls (25%) | 213 / 537 ms | 2,422 / 5,695 ms |
 | Smoke candidate relevance | 3 | 2/6 calls (33%) | 2/6 calls (33%) | 238 / 324 ms | 3,579 / 5,323 ms |
 
 These are client-observed timings on this deployment, not a general speedup claim.
 The two repetitions returned the same labels, but repetition does not add independent
-examples or establish correctness. Laya ran on Apple MPS, with an 8 GiB ARM64 host;
+examples or establish correctness. The three held-out smoke candidates belong to one suite, not three independent suites. Laya ran on Apple MPS, with an 8 GiB ARM64 host;
 initial checkpoint loading took about 9.5 seconds separately from assessment latency.
 
 Both models marked the held-out partial and uncovered cases as covered: four

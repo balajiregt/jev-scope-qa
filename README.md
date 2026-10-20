@@ -1,20 +1,20 @@
 # Playwright Decision Bench
 
-Can a local decision model help review **requirement coverage** and **smoke-suite
-selection** in a Playwright workflow?
+Compare **direct TypeSafe Jev** with **local Laya** for requirement coverage and
+smoke-suite proposals against an existing Playwright repository.
 
 [Project](https://github.com/balajiregt/playwright-decision-bench) ·
-[Results](https://framework-benchmarks-balaji.netlify.app/#decision-bench)
+[Private viewer](https://agentic-qa-metrics-viewer.netlify.app/) ·
+[Aggregate comparisons](https://framework-benchmarks-balaji.netlify.app/#jev-laya-comparison)
 
 ```text
 Requirements + test/assertion evidence + smoke policy
                          ↓
         Same bounded evidence and Choice rubric
                          ↓
-       Local Laya  |  Qwen + rubric baseline
-                  [optional OpenAI Decisions]
+          Local Laya  |  direct TypeSafe Jev
                          ↓
-  Coverage labels / candidate labels → local suite constraints
+  Coverage labels → identical deterministic smoke policy
                          ↓
           Evidence report → QA lead review
 ```
@@ -22,26 +22,28 @@ Requirements + test/assertion evidence + smoke policy
 The agent creates tests; Playwright runs them. This layer reviews supplied evidence
 and proposes a suite. It does not change tags, delete tests or approve releases.
 
-## Use it with your team's repository
+## Compare your team's repository
 
-The local team CLI imports **JSON, XLS, XLSX, DOCX and DOC** requirements, discovers
-Playwright tests and local helpers, runs **Laya or Qwen (Ollama / llama.cpp)**, and
-produces a private HTML report, coverage CSV and draft smoke proposal. It exports
-only validated aggregate metrics for the dashboard.
+Follow the [Jev / Laya guide](docs/jev-laya-comparison.md) to import explicit
+requirements, record three Playwright runs, configure MPS/CPU and your TypeSafe key,
+and inspect the paired coverage matrix and smoke proposals.
 
 ```bash
-npm run qa -- init --repo /path/to/playwright-repo --requirements /path/to/requirements.xlsx
-npm run qa -- import
-npm run qa -- run
+npm run qa -- compare --providers laya
+npm run qa -- compare --providers laya,jev --allow-hosted
 ```
 
-Follow the [team quickstart](docs/team-quickstart.md) for installation, file templates,
-execution history, provider configuration and metrics publication. This is an
-experimental review assistant; model findings require lead review. The synthetic
-pilot below remains separate from team evaluations. See the [integration checks and
-known limits](docs/team-validation.md).
+Both commands use the generated local config. Only the second sends evidence to
+TypeSafe. Detailed `comparison.json` stays private in the browser-only QA viewer;
+`metrics.json` is the validated aggregate for Framework Benchmarks. Execution
+results, model probability and historical pass rates remain separate signals.
+Reviewer labels are optional; accuracy is unavailable without them.
 
-## What is implemented
+The [existing local team commands](docs/team-quickstart.md) and earlier
+[validation results](docs/team-validation.md) remain available. The pilot below
+is historical, separate from the Jev / Laya comparison.
+
+## Historical pilot and local-provider support
 
 - Coverage: **covered / partial / uncovered / needs_judgment**, with references to
   the evidence considered. Missing helpers and ambiguous requirements preserve uncertainty.

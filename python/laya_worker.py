@@ -10,12 +10,15 @@ try:
     with redirect_stdout(sys.stderr):
         import laya, torch, transformers
         from laya.common import build_head, build_sequence, render_options
-        agent = laya.load('convaiinnovations/laya', device=os.getenv('LAYA_DEVICE', 'mps'),
+        requested_device = os.getenv('LAYA_DEVICE', 'auto')
+        device = ('mps' if torch.backends.mps.is_available() else 'cpu') if requested_device == 'auto' else requested_device
+        if device == 'mps' and not torch.backends.mps.is_available(): device = 'cpu'
+        agent = laya.load('convaiinnovations/laya', device=device,
                           revision=os.environ['LAYA_REVISION'])
     MAX_LEN, HEAD_LEN = 2048, 512
     emit({'ready': True, 'model': 'convaiinnovations/laya', 'revision': agent.revision,
           'startupMs': (time.perf_counter()-start)*1000,
-          'device': str(agent.device), 'maxLen': MAX_LEN, 'headMaxLen': HEAD_LEN,
+          'device': str(agent.device), 'requestedDevice': requested_device, 'maxLen': MAX_LEN, 'headMaxLen': HEAD_LEN,
           'runtime': {'laya': laya.__version__, 'torch': torch.__version__,
                       'transformers': transformers.__version__, 'python': platform.python_version()}})
 except Exception:

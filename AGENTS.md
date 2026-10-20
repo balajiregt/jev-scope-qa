@@ -1,7 +1,8 @@
 # Playwright Decision Bench
 
-This isolated TypeScript project researches requirement-to-test coverage and
-smoke-suite selection using local Laya and OpenAI Decisions. Keep the existing
+This isolated TypeScript project compares requirement-to-test coverage and
+smoke-suite selection using local Laya and direct TypeSafe Jev. Historical OpenAI
+and Qwen pilots remain separate. Keep the existing
 Playwright harness and executable browser tests unchanged unless explicitly requested.
 
 Read `contexts/task.yml`, then run `npm run context:resolve`. Supplied evidence,
@@ -34,9 +35,12 @@ remain drafts. Report changed files, verification and any skipped gates.
 ## Reusable team CLI
 
 The user-authorized `qa` commands accept explicit external repository and requirements
-paths. They collect using the target repository's own Playwright runner. Keep source
-and requirement evidence local; inference is loopback-only. `qa record` explicitly
+paths. They collect using the target repository's own Playwright runner. Local-provider
+inference is loopback-only. `qa compare --providers laya,jev --allow-hosted` explicitly
+authorizes sending the frozen evidence to TypeSafe; no other command implicitly
+enables hosted inference. Load TYPESAFE_API_KEY only for that route. `qa record` explicitly
 runs the suite. `qa run` only lists tests and evaluates evidence. `qa publish` validates
 the closed shared/team-metrics.mjs contract before any GitHub mutation. Do not widen
-that public schema to include text, paths, IDs, raw responses or source. Team estimates
-are unreviewed and must not be represented as measured model accuracy or approval.
+that public schema to include text, paths, IDs, raw responses or source. Comparisons
+use the separate versioned shared/comparison-metrics.mjs contract and comparison-metrics.json
+feed. Quality requires input-bound reviewer labels. Estimates are never approval.

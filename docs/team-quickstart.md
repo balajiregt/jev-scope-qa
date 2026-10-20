@@ -1,5 +1,9 @@
 # Evaluate your Playwright suite locally
 
+For paired Jev versus Laya evaluation and the private QA viewer, use the
+[Jev / Laya comparison guide](jev-laya-comparison.md). This page documents the
+existing local-only `qa run` workflow.
+
 Point the evaluator at an existing repository and requirements file. It produces
 a **draft coverage matrix**, **draft smoke proposal**, and **metrics-only export**.
 Laya and Qwen use separate local runtimes. No hosted AI key is needed.

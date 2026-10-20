@@ -6,6 +6,7 @@ import path from 'node:path';
 import ts from 'typescript';
 import {randomUUID} from 'node:crypto';
 import {ROOT,digest} from '../context.js';
+import {compactEvidence} from './evidence.js';
 import {insideRepo,type Config} from './config.js';
 const exec=promisify(execFile);
 export interface Evidence {code:string;sources:{ref:string;file:string;code:string;sha256:string}[];issues:string[];fingerprint:string}
@@ -67,12 +68,13 @@ export async function sourceEvidence(repo:string,file:string,line:number,column:
  await visit(file);
  return {code,sources,issues:[...new Set(issues)],fingerprint:digest(JSON.stringify(sources.map(s=>[s.file,s.sha256])))};
 }
-export async function collect(c:Config,execute=false):Promise<Inventory>{
+export async function collect(c:Config,execute=false,compact=false,testList?:string):Promise<Inventory>{
+ c={...c,repo:await realpath(c.repo)};
  await mkdir(c.output,{recursive:true});const rawFile=path.join(c.output,`collection-${randomUUID()}.json`);
  const require=createRequire(path.join(c.repo,'package.json'));let cli:string;
  try{cli=require.resolve('@playwright/test/cli');}catch{throw Error('Install the target repository dependencies first; @playwright/test is missing');}
  const config=await insideRepo(c.repo,c.playwrightConfig);
- const args=[cli,'test','--config',config,...(execute?[]:['--list']),`--reporter=${path.join(ROOT,'scripts/team-reporter.cjs')}`,...c.projects.map(p=>`--project=${p}`)];
+ const args=[cli,'test','--config',config,...(execute?[]:['--list']),...(testList?['--test-list',testList]:[]),`--reporter=${path.join(ROOT,'scripts/team-reporter.cjs')}`,...c.projects.map(p=>`--project=${p}`)];
  let failed=false;
  try{await exec(process.execPath,args,{cwd:c.repo,env:{...process.env,DECISION_INVENTORY_FILE:rawFile,DECISION_COLLECT_MODE:execute?'run':'list'},timeout:execute?3600000:120000,maxBuffer:1024*1024});}catch{failed=true;}
  let raw:any;try{raw=JSON.parse(await readFile(rawFile,'utf8'));}catch{throw Error('Playwright collection failed. Check the repository config using its own test --list command.');}
@@ -80,7 +82,8 @@ export async function collect(c:Config,execute=false):Promise<Inventory>{
  const tests:TeamTest[]=[];
  for(const t of raw.tests){
   const absolute=await insideRepo(c.repo,t.file),file=path.relative(c.repo,absolute);
-  const evidence=await sourceEvidence(c.repo,file,t.line,t.column,c.maxSourceBytes);
+  let evidence=await sourceEvidence(c.repo,file,t.line,t.column,c.maxSourceBytes);
+  if(compact)evidence=compactEvidence(evidence,t.roles);
   tests.push({id:digest(JSON.stringify([file,t.line,t.column,t.project,t.titlePath])).slice(0,20),title:t.title,project:t.project,file,line:t.line,column:t.column,runnable:t.expectedStatus==='passed',dependencies:[],evidence,durationMs:null,passRate:null,runs:0,results:t.results});
  }
  for(const t of tests)if(tests.filter(x=>x.file===t.file&&x.line===t.line&&x.column===t.column&&x.project===t.project).length>1)t.evidence.issues.push('parameterized_test_binding_requires_review');
@@ -95,7 +98,7 @@ export async function applyHistory(inventory:Inventory,files:string[]){
   const samples=histories.flatMap(h=>h.tests.filter(x=>x.id===t.id&&x.evidence?.fingerprint===t.evidence.fingerprint).map(x=>x.results)).filter(r=>r?.length&&r[0].status!=='skipped');
   if(!samples.length)continue;
   if(samples.flat().some(r=>!Number.isFinite(r.durationMs)||r.durationMs<0||!['passed','failed','timedOut','interrupted','skipped'].includes(r.status)))throw Error('Invalid execution history');
-  t.runs=samples.length;t.passRate=samples.filter(r=>r[0].status==='passed'&&r[0].expectedStatus==='passed').length/samples.length;
+  t.results=samples.at(-1)!;t.runs=samples.length;t.passRate=samples.filter(r=>r[0].status==='passed'&&r[0].expectedStatus==='passed').length/samples.length;
   const durations=samples.map(r=>r.reduce((s,x)=>s+x.durationMs,0)).sort((a,b)=>a-b);t.durationMs=durations[Math.ceil(.95*durations.length)-1];
  }
  return inventory;

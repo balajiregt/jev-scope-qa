@@ -1,67 +1,67 @@
-# Can Decision Models Help Us Validate Coverage and Choose Smoke Tests?
+# Can a Local Decision Model Review Playwright Test Coverage?
 
-*A Playwright experiment with local Laya and OpenAI Decisions.*
+A passing Playwright test can still miss the acceptance criterion. And a short
+test is not automatically a useful smoke test.
 
-As an E2E suite grows, two questions keep coming back: **are we testing the requirements, and which tests belong in the smoke suite?**
+I built **Playwright Decision Bench** to explore two practical review tasks:
 
-These are the two use cases I want to evaluate. The approach is simple: define the task, apply both decision models to the same evidence, then measure whether their recommendations help.
+- **Requirement coverage:** do the actual assertions verify the requested behavior?
+- **Smoke selection:** which tests preserve critical journeys within a runtime budget?
 
-## 1. Validate test coverage against requirements
-
-Give each model the acceptance criteria, test inventory and actual test/helper assertions. Ask it to classify coverage as **covered, partial, uncovered or needs judgment**.
-
-For example, “Viewers cannot delete customers and the data remains intact” is not covered by checking that the Customers heading appears. A test that asserts access denial but never verifies data preservation provides only partial coverage.
-
-The intended output is a requirement-to-test matrix with evidence links and remaining gaps. Multiple tests may collectively cover a criterion. Missing helpers or an incomplete inventory require judgment; a passing test alone does not prove coverage.
-
-Assertion adequacy belongs inside this use case: it helps establish whether a claimed requirement-to-test link is meaningful.
-
-## 2. Identify smoke tests from the full E2E suite
-
-Give each model the test behaviors, critical business journeys, dependencies, recent durations, reliability data and the team's smoke policy.
-
-Ask it to recommend **include, exclude or needs judgment** for each candidate. Then check the proposed suite as a whole: does it preserve mandatory journeys and dependencies within the execution budget?
-
-A short test is not automatically a smoke test. A flaky test covering a critical journey may need repair or replacement; simply excluding it can leave the smoke suite blind.
-
-Duplicate coverage matters here as a supporting consideration. The objective is a focused, feasible suite that retains the behavior the team considers essential.
-
-## How the comparison works
+## Where the layer fits
 
 ```text
-Requirements + test evidence + smoke policy
-                    ↓
-        Same assessment task and rubric
-                    ↓
-        Local Laya | OpenAI Decisions
-                    ↓
-    Coverage matrix or smoke-suite proposal
-                    ↓
-      Quality + performance measurements
-                    ↓
-               Lead review
+Ticket + requirements → coding agent → test/assertion evidence
+                                              ↓
+                                  Local Laya review
+                                              ↓
+                         Coverage labels / smoke candidates
+                                              ↓
+                  Local dependency, reliability and budget checks
+                                              ↓
+                              QA lead reviews the proposal
 ```
 
-The existing agent + MD/skill review is the baseline. Our local Ollama/Qwen model can support that baseline; Laya uses its own checkpoints and needs a verified serving setup. [Laya project](https://github.com/NandhaKishorM/laya)
+The coding agent still writes tests and Playwright executes them. Laya adds a
+bounded review step; it does not approve releases or rewrite the suite.
 
-Each model receives bounded evidence and typed Choice questions. Provider responses are validated and normalized; low certainty or missing evidence goes to human review. Local code checks suite constraints. The lead approves changes, and Playwright executes the tests.
+## What we send and receive
 
-## What we will measure
+Laya receives the evidence as `state`, plus a typed **Choice** question and its
+allowed answers. For coverage: `covered`, `partial`, `uncovered`, `needs_judgment`.
+For smoke candidates: `include`, `exclude`, `needs_judgment`.
 
-| Use case | Quality and value |
-|---|---|
-| Requirement coverage | Gap precision/recall, false-covered findings, label accuracy and reviewer effort |
-| Smoke selection | Critical journeys retained, missed journeys, dependency/budget violations and measured runtime reduction |
-| Both | Successful-call p50/p95 latency, cost, local resources, errors and repeated-run consistency |
+It returns the chosen label and probabilities. Local code validates the response,
+keeps raw findings visible, and routes missing evidence or low probability to review.
+A provisional 0.8 threshold is a routing rule—not an accuracy guarantee.
 
-There may be several valid smoke suites, so matching one reference list is not enough. We will measure failure-detection retention only by executing against diagnosed regressions or controlled faults.
+Laya also supports `noul` for yes/no probability and `score` for ordered ratings.
+Choice fits these tasks because we need explicit categories. Smoke selection then
+needs a whole-suite check: individual “include” answers cannot prove that dependencies
+and mandatory journeys fit the budget.
 
-Use held-out work items and repeat runs. Evaluate untuned Laya first; any fine-tuned variant receives a separate result. Neither a high probability nor agreement between models establishes correctness.
+## What the first experiment showed
 
-**Current status:** the scope and offline scaffold are ready. Laya/OpenAI integration,
-the coverage matrix and smoke-selection workflow are planned. There are no measured
-model-comparison results yet.
+I compared local Laya with the installed Ollama/Qwen model using the same rubric.
+This Qwen run is a model proxy, not a full Copilot or Claude agent workflow.
 
-I’ll publish the measured results on [Framework Benchmarks](https://framework-benchmarks-balaji.netlify.app/), with separate coverage and smoke-selection comparisons, sample sizes and run conditions. The new experiment’s results are not published yet.
+The pilot contains 16 synthetic decisions and two repetitions. On the held-out
+cases, both models matched **1 of 4 coverage labels** and **1 of 3 smoke labels**
+on each repetition. Both incorrectly treated important coverage gaps as covered.
+Laya's threshold routed those answers to human review.
 
-[Project](https://github.com/balajiregt/playwright-decision-bench).
+That is the useful result: a working integration is not proof of useful judgment.
+The current untuned setup is not ready for unattended decisions.
+
+The labels are author-supplied and need independent review. Actual Playwright runtime
+savings and fault-detection retention are unmeasured. OpenAI Decisions remains an
+optional direct-API comparator, with no valid measurements yet. Laya needs no Vercel
+account or API key.
+
+Next: review the dataset, improve only against development examples, and test again
+on fresh held-out requirements.
+
+[Project](https://github.com/balajiregt/playwright-decision-bench) ·
+[Graphs and measured limits](https://framework-benchmarks-balaji.netlify.app/#decision-bench)
+
+*Draft — not published.*

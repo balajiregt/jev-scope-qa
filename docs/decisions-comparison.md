@@ -1,37 +1,47 @@
-# Local Laya and OpenAI Decisions — comparison plan
+# Typed input, typed output, local action
 
-Start with [the two use cases and measurement plan](evaluation-scope.md):
-requirement-to-test coverage and smoke-suite selection.
+The live pilot uses **Choice** for both tasks. Neither task needs free-form prose.
 
-Both models should assess the same bounded evidence, rubric and allowed outcomes.
-Provider-specific adapters will normalize responses into finding, probabilities,
-confidence, usage, timing and operational status. This adapter contract is planned;
-current previews only show a normalized representation for offline review.
+```ts
+// Shared packet, before provider-specific serialization:
+{
+  input: 'Requirement + supplied test/assertion evidence',
+  instructions: 'Classify requirement coverage from assertions, preserving uncertainty.',
+  choices: {
+    covered: 'All required behavior is verified.',
+    partial: 'Only some required behavior is verified.',
+    uncovered: 'Complete evidence contains no adequate test.',
+    needs_judgment: 'Evidence or requirements are insufficient.'
+  }
+}
+```
 
-| Use case | Planned categories | Downstream decision |
+| Provider | Request | Response consumed |
 |---|---|---|
-| Requirement coverage | covered, partial, uncovered, needs judgment | Lead verifies evidence links and addresses confirmed gaps. |
-| Smoke selection | include, exclude, needs judgment | Local logic checks critical journeys, dependencies and runtime; lead agrees the suite. |
+| Local Laya | `agent.predict(input, {decision: {type: 'choice', instructions, criteria}})` | `answers.decision.choice`, probability map, confidence, token usage |
+| Direct OpenAI Decisions | `{model: 'gpt-6-luna', input, questions: [{name: 'decision', type: 'choice', instructions, choices: [{value, description}]}]}` | `answers[]` choice/probability entries or refusal, usage |
+| Ollama/Qwen proxy | Same packet in a JSON-constrained chat request | `{decision: 'covered'}`; no probabilities invented |
 
-Do not assume one provider's JSON is another provider's native wire format.
-Laya requires its own checkpoint and a verified local serving setup. The existing
-Ollama/Qwen model can be the agent/skill baseline. Hosting and hardware costs must
-be recorded separately from provider charges; open weights do not imply zero cost.
+Laya's other primitives are `noul` (yes/no probability) and `score` (ordered rubric).
+OpenAI calls the yes/no primitive `predicate`; it also supports `choice` and `score`.
+They are not wire-compatible. This project normalizes Choice results locally.
 
-## Available now
+An accepted answer has a known label and a valid probability distribution when
+provided. Wrong models, malformed JSON and refusals remain separate outcomes.
+Missing evidence or selected-label probability below the provisional 0.8 threshold
+routes to review. Raw labels remain visible so routing cannot hide model mistakes.
+Qwen's generated JSON has no calibrated probability, so only evidence/policy guards apply.
 
-`npm run compare:preview` produces an offline HTML/JSON preview of shared evidence.
-The current scaffold uses earlier planning/assertion/duplication rubrics, not yet
-the final coverage/smoke contracts above. Unit tests inject normalized results to
-validate metrics, abstention and error handling. No live CLI or publisher is enabled.
+Coverage reports link to the evidence considered; Choice does not generate a
+written rationale or verified supporting citation. Smoke labels feed a deterministic
+subset optimizer: preserve mandatory journeys and dependencies within budget. If
+no feasible subset exists, return the conflict and require human judgment.
 
-## Next implementation
+Laya runs locally with a pinned checkpoint and tokenizer preflight. OpenAI is an
+optional **direct API** integration using `OPENAI_API_KEY`; the prior Gateway route
+has been removed. No Laya credential or Vercel setup is needed.
 
-Verify local Laya loading and token limits, implement both adapters, create held-out
-coverage and smoke datasets, and add whole-suite constraints and per-use-case metrics.
-Then extend the public dashboard's schema for validated aggregates. Do not publish
-an accuracy or speed comparison until matching runs complete.
-
-Sources: [Laya weights](https://huggingface.co/convaiinnovations/laya/tree/main),
-[Laya project](https://github.com/NandhaKishorM/laya),
-[OpenAI Decisions](https://developers.openai.com/api/docs/guides/decisions).
+Sources checked October 20, 2026:
+[Laya](https://github.com/NandhaKishorM/laya),
+[OpenAI Decisions](https://developers.openai.com/api/docs/guides/decisions),
+[Decisions API reference](https://developers.openai.com/api/reference/resources/decisions/methods/create).

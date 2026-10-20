@@ -1,29 +1,23 @@
-Two decisions I want to improve in an agentic Playwright framework:
+Can a local decision model help review Playwright tests?
 
-1. Are our tests actually covering the requirements?
-2. Which tests should form the smoke suite from the full E2E inventory?
+I built Playwright Decision Bench around two questions:
+• Do the assertions actually cover the requirement?
+• Which E2E tests should form the smoke suite?
 
-I’m shaping an experiment around local Laya versus OpenAI Decisions, using the existing agent + MD/skill review as a baseline.
+The flow:
+Requirements + test evidence → Laya → typed labels → local suite checks → QA lead review.
 
-For requirement coverage:
-Acceptance criteria + test/helper assertions → covered, partial, uncovered or needs judgment.
+We send a Choice question with allowed answers. Laya returns a label and probabilities. Missing evidence or low probability goes to review. Smoke proposals must also preserve critical journeys, dependencies and the runtime budget.
 
-For smoke selection:
-Test behavior + critical journeys + dependencies + duration/reliability + runtime budget → include, exclude or needs judgment.
+The first result was sobering: across two repetitions, both local Laya and a Qwen + rubric baseline matched only 1/4 held-out coverage labels and 1/3 smoke labels. Both missed meaningful coverage gaps.
 
-Then validate the proposed suite as a whole. A short test is not automatically smoke-worthy, and excluding a flaky critical test can hide an essential journey.
+That is why I wanted a benchmark before adoption. Working APIs do not establish useful judgment.
 
-What I want to measure:
-• Coverage: gap precision/recall and false-covered findings.
-• Smoke: critical journeys retained, missed journeys and runtime reduction.
-• Both: latency, cost, reliability and reviewer effort.
-
-The lead reviews recommendations; Playwright executes tests. Several smoke suites may be valid—the goal is useful coverage within the budget.
-
-Scope defined; Laya integration and these two workflows are next. No measured comparison claims yet.
+Small, author-labeled synthetic pilot; independent review is pending. No claim of Playwright runtime savings. OpenAI Decisions is an optional comparator, still unmeasured. Laya runs locally without Vercel or an API key.
 
 Project: https://github.com/balajiregt/playwright-decision-bench
-
-Planned results destination: https://framework-benchmarks-balaji.netlify.app/
+Graphs: https://framework-benchmarks-balaji.netlify.app/#decision-bench
 
 #Playwright #TestAutomation #QualityEngineering #LocalAI
+
+Draft — not published.

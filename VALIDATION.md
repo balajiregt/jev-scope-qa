@@ -1,19 +1,28 @@
 # Validation — October 20, 2026
 
-Repository identity: `playwright-decision-bench`.
+The two-use-case synthetic pilot is implemented and ran locally. 16 cases × two
+repetitions produced 32 Laya and 32 Qwen answers. One initial hosted request failed
+with HTTP 403; 31 remaining hosted rows were not run. The old Gateway route was
+then removed. Direct OpenAI is optional and not yet measured.
 
-Current scope: requirement-to-test coverage and smoke-suite selection, comparing
-local Laya and OpenAI Decisions. Both provider integration and these two complete
-workflows remain pending. No measured model performance is claimed.
+Passed: `npm run typecheck`, `npm test` (40 tests), `npm run context:resolve`,
+`npm run review:preview`, `npm run compare:preview`, `npm run benchmark:crm:preview`,
+`npm run bench:preview`, `npm run bench:preflight` (16/16 packets without truncation),
+`npm run bench:report`, and Python syntax compilation. `bench:live -- 2` recorded
+real local responses; errors and unrun requests stayed distinct from valid answers.
+The exact authored input and gold hashes are attached to the report. No held-out
+labels or prompts were changed after seeing the results.
 
-The retained offline scaffold includes schema validation, evidence isolation,
-normalized response parsing, probability routing, error/refusal handling and
-comparison metrics tested with injected responses. Earlier provider-specific
-runners, saved results, report screenshots and automatic publishing are retired.
+The shared dashboard passed 37 Python and 36 JavaScript tests and its static build.
+Browser inspection confirmed chart layout, unavailable OpenAI measurements and
+suite-constraint details. Public output contains aggregates only.
 
-All 26 offline tests and TypeScript checking passed. The four preview/context commands completed without network calls.
+Skipped: actual application Playwright execution, fault-retention experiments,
+independent human label review and timed reviewer study. The existing harness was
+not changed. The workspace UI resolver was attempted but references the missing
+`projects/ui-automation/role-aware-mockserver` directory; this blocks that old
+harness context, not the isolated synthetic decision pilot.
 
-Verification commands: `npm run typecheck`, `npm test`, `npm run context:resolve`,
-`npm run review:preview`, `npm run compare:preview`, `npm run benchmark:crm:preview`.
-Live benchmarks and application Playwright suites are skipped: no live adapter is
-exposed, and the existing harness is unchanged. Offline tests do not prove accuracy.
+Local state: project-specific `.venv`, pinned Laya cache and raw reports remain
+ignored. Existing secrets were not printed or published. The current adapters
+never consume the old Gateway credential. Medium and LinkedIn remain drafts.

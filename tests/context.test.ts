@@ -24,5 +24,5 @@ test('context resolves authored evidence without provider results or credentials
   const context = await resolveContext();
   assert.equal(context.items.length, 2);
   assert.match(context.provenance.inputs.sha256, /^[a-f0-9]{64}$/);
-  assert.equal(JSON.stringify(context).includes('AI_GATEWAY_API_KEY'), false);
+  assert.equal(JSON.stringify(context).includes('OPENAI_API_KEY'), false);
 });

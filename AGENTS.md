@@ -8,8 +8,8 @@ Read `contexts/task.yml`, then run `npm run context:resolve`. Supplied evidence,
 assertions and completeness flags determine coverage; names, claimed links and
 passing run records are not proof. Preserve uncertainty and missing helpers.
 
-Current CLI commands are offline previews only. Live provider adapters and the
-new two-use-case benchmark remain pending. `workflow.ts` retains general rubric
+The bench:* commands implement a bounded synthetic coverage/smoke pilot. Laya and
+Qwen run locally. OpenAI is optional and direct-only; never use old Gateway keys. `workflow.ts` retains general rubric
 machinery; `comparison.ts` uses normalized injected responses in tests. Do not
 claim native API compatibility, live results or measured gains from offline tests.
 
@@ -24,10 +24,9 @@ coverage, dependency and runtime constraints before lead approval.
 
 Run `npm run typecheck`, `npm test`, `npm run context:resolve`,
 `npm run review:preview`, `npm run compare:preview` and
-`npm run benchmark:crm:preview` after implementation changes. Previews and tests
+`npm run benchmark:crm:preview` and `npm run bench:preview` after implementation changes. Previews and tests
 must not use network APIs. Documentation-only changes need link/reference checks.
 
-The public destination is framework-benchmarks-balaji.netlify.app. The new result
-feed is pending. Keep raw reports, prompts, code, keys and reviewer notes private.
+The public destination is framework-benchmarks-balaji.netlify.app. The result feed is benchmark-results/decision-bench.json. Keep raw reports, prompts, code, keys and reviewer notes private.
 Do not reuse retired provider results under a new model name. Medium/LinkedIn
 remain drafts. Report changed files, verification and any skipped gates.

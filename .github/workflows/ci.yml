@@ -20,3 +20,5 @@ jobs:
       - run: npm run review:preview
       - run: npm run benchmark:crm:preview
       - run: npm run compare:preview
+      - run: npm run bench:preview
+      - run: python3 -m py_compile python/laya_worker.py

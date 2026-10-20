@@ -1,0 +1,2 @@
+laya==0.4.12
+# Reproducibility: the measured pilot records actual torch/transformers/tokenizer versions.

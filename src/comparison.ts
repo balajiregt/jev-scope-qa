@@ -2,10 +2,10 @@ import { z } from 'zod';
 import { digest } from './context.js';
 import { outcomes, parseFinding, stages, validateWorkflowGold, type Check, type Decision, type Outcome, type WorkflowGold } from './workflow.js';
 
-export const models = { laya: 'convaiinnovations/laya', openai: 'openai/gpt-6-luna-decisions' } as const;
+export const models = { laya: 'convaiinnovations/laya', openai: 'gpt-6-luna' } as const;
 export const providers = ['laya', 'openai'] as const;
 export type Provider = typeof providers[number];
-export const endpoint = 'https://ai-gateway.vercel.sh/v1/decisions';
+export const endpoint = 'https://api.openai.com/v1/decisions';
 export function decisionRequest(check: Check, provider: Provider) {
   const question = check.request.questions.finding;
   return { model: models[provider], input: check.request.state, questions: [{

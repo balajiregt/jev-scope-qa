@@ -107,7 +107,7 @@ Shared measurements:
 | Coverage false reassurance | Raw positive on gold-negative evidence; report gold-neutral positives separately | A useful reviewer must not confidently wave through weak tests. |
 | Human workload | Neutral/low-probability rate; operational failures separately | Abstaining may be appropriate, but too many reviews remove the benefit. |
 | Repeatability | Same-label rate across repeated calls per example | Exposes instability hidden by a single run. |
-| Latency | Client-observed p50/p95 for usable answers, with sample counts | Includes Gateway/network overhead; timeouts and failed-call latency are separate. |
+| Latency | Client-observed p50/p95 for usable answers, with sample counts | Includes client/network overhead; timeouts and failed-call latency are separate. |
 | Cost | Reported cost and tokens per attempted call; total reported cost / usable answers | Disclose missing cost records; do not infer an invoice from partial metadata. |
 | Reliability | Valid-answer, HTTP-error, malformed-answer, refusal and timeout rates | Operational failure is not a neutral model judgment. |
 | Practical benefit | Reviewer time and accepted useful findings versus agent + skill baseline | Requires a timed, counterbalanced human study; no time-savings claim without it. |
@@ -158,39 +158,26 @@ Keep model assessment time separate from actual Playwright suite runtime.
 - Shared view: successful-call p50/p95, reported cloud cost, local resource use,
   repeatability and unavailable measurements. Do not convert missing data to zero.
 
-The shared dashboard uses repository result feeds. Its active experiment entry
-links to `playwright-decision-bench` and is marked not yet measured. The new schema,
-exporter and dashboard reader must be implemented together before publishing a
-comparison. No previous provider results are reused.
+The shared dashboard reads sanitized aggregates from
+`playwright-decision-bench/benchmark-results/decision-bench.json`.
+Raw packets, responses and keys stay local. The first local pilot is documented in
+[pilot findings](pilot-findings.md); OpenAI has no valid measurements.
 
-Publish aggregate evidence and approved synthetic examples. Keep raw requirement
-text, repository code, prompts, outputs, traces, credentials and reviewer notes
-local. A blocked run is a status update, not a measured quality comparison.
-No new experiment results have been published by this scope update.
+## Implemented versus remaining
 
-## Current implementation versus planned experiment
+Implemented: coverage labels, evidence references, smoke policy/inventory contract,
+candidate assessment, dependency/budget/reliability checks, local Laya and Qwen
+adapters, optional direct OpenAI adapter, token preflight, raw/routed findings,
+per-task quality, p50/p95, repeatability, operational errors and graph reports.
 
-- Existing scaffold: three legacy rubrics (planning, duplication, assertions), paired requests, local gold comparison,
-  exact matches, aggregate issue recall, raw unsafe-positive counts, routing,
-  operational outcomes, observed median request duration and returned cost.
-- Planned: requirement coverage labels/matrix, smoke policy and inventory contract,
-  smoke assessment and suite constraints, expanded held-out dataset, agent/skill baseline, issue precision,
-  per-candidate quality summaries, successful-call p50/p95, repeated-run stability,
-  cost per usable answer and timed reviewer study. Current median includes failed
-  attempts; it must not be presented as model inference speed.
-- Intended experiment: local Laya versus OpenAI Decisions. Both live adapters are pending. The offline scaffold uses injected responses. The author confirmed
-  [convaiinnovations/laya](https://huggingface.co/convaiinnovations/laya/tree/main)
-  and [NandhaKishorM/laya](https://github.com/NandhaKishorM/laya).
-  Local inspection on October 20 found Ollama client 0.23.1 and installed
-  `qwen3:4b`. Use Qwen + the same review instructions as a local baseline; Laya
-  requires its own checkpoint and verified serving runtime. Do not relabel Qwen
-  results as Laya or assume this installed Ollama can serve the supplied weights.
-- Record local hardware, memory use, checkpoint revision, precision, token budget
-  and warm/cold state. Measure cold startup separately. Verify full evidence reaches
-  both models; no silent truncation. Local model timing and hosted end-to-end timing
-  describe different deployments, not pure architecture speed.
-- Research reference: [upstream Laya](https://github.com/NandhaKishorM/laya).
-  Verify its runtime and input limits before choosing packet sizes.
+The first pilot uses 16 synthetic decisions and two repetitions, smaller than the
+proposed expanded study above. Labels are author-supplied, not independently adjudicated.
+No held-out errors were used to change the frozen rubric or labels.
 
-See [the existing adapter and request examples](decisions-comparison.md). Start
-with the scope above; use the adapter to execute the chosen experiment.
+Remaining: independent label review, expanded dataset, full tool-using agent baseline,
+direct OpenAI measurements, measured Playwright suite runtime and fault retention,
+calibrated thresholds and timed human review. Laya uses its own pinned English
+checkpoint; the installed Ollama Qwen model is never relabeled as Laya.
+
+See [the adapter contract](decisions-comparison.md) and
+[reproducible pilot protocol](../benchmarks/decision-pilot/README.md).

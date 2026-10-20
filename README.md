@@ -1,62 +1,86 @@
 # Playwright Decision Bench
 
-Identify where decision models help an agentic Playwright workflow, then compare
-**local Laya and OpenAI Decisions** against the existing agent + MD/skill baseline.
+Can a local decision model help review **requirement coverage** and **smoke-suite
+selection** in a Playwright workflow?
 
-Repository: [balajiregt/playwright-decision-bench](https://github.com/balajiregt/playwright-decision-bench).
-Results destination: [Framework Benchmarks](https://framework-benchmarks-balaji.netlify.app/).
+[Project](https://github.com/balajiregt/playwright-decision-bench) ·
+[Results](https://framework-benchmarks-balaji.netlify.app/#decision-bench)
 
-## Two primary use cases
+```text
+Requirements + test/assertion evidence + smoke policy
+                         ↓
+        Same bounded evidence and Choice rubric
+                         ↓
+       Local Laya  |  Qwen + rubric baseline
+                  [optional OpenAI Decisions]
+                         ↓
+  Coverage labels / candidate labels → local suite constraints
+                         ↓
+          Evidence report → QA lead review
+```
 
-| Use case | Planned output | Quality measures |
-|---|---|---|
-| Requirement-to-test coverage | Covered, partial, uncovered or needs judgment, with evidence links | Gap precision/recall and false-covered findings |
-| Smoke selection from the E2E suite | Proposed subset with critical journeys, dependencies and runtime constraints checked | Critical coverage retained, missed journeys and measured runtime reduction |
+The agent creates tests; Playwright runs them. This layer reviews supplied evidence
+and proposes a suite. It does not change tags, delete tests or approve releases.
 
-Assertion adequacy supports coverage validation. Duplication helps refine the smoke
-suite. The coding agent produces tests, Playwright executes them, and leads approve
-changes. Models do not automatically delete tests, change tags or approve releases.
+## What is implemented
 
-## Current status
+- Coverage: **covered / partial / uncovered / needs_judgment**, with references to
+  the evidence considered. Missing helpers and ambiguous requirements preserve uncertainty.
+- Smoke: **include / exclude / needs_judgment**, followed by deterministic subset
+  selection checking mandatory journeys, dependencies, reliability and budget.
+- Local Laya 0.4.12, pinned English checkpoint, Python/MPS adapter with token
+  preflight. Oversized packets are excluded for every provider; no silent truncation.
+- Local Ollama `qwen3:4b` proxy using the same evidence and rubric. It is not a
+  measurement of a complete Copilot/Claude agent workflow.
+- Optional **direct OpenAI Decisions** adapter using `OPENAI_API_KEY`. Laya needs
+  no key. The Vercel Gateway route is no longer used.
+- JSON + HTML reports: accuracy, gaps, false reassurance, p50/p95 latency,
+  repeatability, operational failures and safe smoke proposals.
 
-Scope and publication drafts are ready. Provider integration, expanded datasets,
-requirement coverage labels/matrix and smoke-selection workflow are **pending**.
-No Laya/OpenAI performance results have been measured or published.
+## First pilot
 
-The retained offline scaffold validates supplied evidence, builds planning/assertion/
-duplication questions and tests normalization, routing and comparison calculations
-using injected responses. It is infrastructure for the experiment, not the finished
-two-use-case benchmark. Its normalized question packets are not verified provider
-wire requests. Live CLI commands and automatic publication are intentionally absent.
+16 authored synthetic decisions × 2 repetitions; **64 valid local assessments**.
+The held-out partition has four coverage cases and three smoke candidates.
+Both local models matched 1/4 coverage labels and 1/3 smoke labels on each repetition.
+This is a small, author-labeled sanity pilot, not evidence for unattended adoption.
+OpenAI has no valid measurements; direct credentials are not configured.
 
-## Explore locally
+Actual Playwright runtime reduction, fault-detection retention, hardware operating
+cost and human review time remain **unmeasured**. Fixture duration values are authored
+estimates. See [pilot findings](docs/pilot-findings.md).
 
-Use Node.js 22+:
+## Run locally
+
+Node.js 22+, Python 3.10+, and Ollama with `qwen3:4b`:
 
 ```bash
-git clone https://github.com/balajiregt/playwright-decision-bench.git
-cd playwright-decision-bench
 npm ci
-npm run context:resolve
+python3 -m venv .venv
+.venv/bin/python -m pip install -r python/requirements.txt
 npm run typecheck
 npm test
-npm run review:preview
-npm run compare:preview
+npm run bench:preview       # offline; no model calls
+npm run bench:preflight     # downloads/loads pinned Laya; checks token fit
+npm run bench:live -- 2     # bounded synthetic pilot; direct OpenAI only if keyed
+npm run bench:report       # rebuild graphs from recorded responses; no calls
 npm run report:serve
 ```
 
-Open `http://127.0.0.1:8791/comparison-preview.html`. It contains no invented
-findings or performance scores. `npm run benchmark:crm:preview` checks the larger
-synthetic evidence inventory offline. No preview command loads API credentials.
+Open `http://127.0.0.1:8791/decision-bench.html`. Local raw reports and model cache
+stay under ignored `artifacts/`. The first Laya load downloads checkpoint weights.
+The default device is `mps`; set `LAYA_DEVICE=cpu` on non-Apple systems. Live runs load
+`.env.local`; use `.env.example` for the optional direct API key. No repo-source
+export or arbitrary input path is exposed by the pilot CLI. Each run is capped at
+150 assessments and stops a provider after access/billing/rate-limit failures.
 
-## Experiment and publication
+## Design and limits
 
-- [Scope, selection policy and measurement plan](docs/evaluation-scope.md)
-- [Comparison contract and implementation status](docs/decisions-comparison.md)
-- [Agent evidence handoff](docs/agent-handoff.md)
-- [Benchmark protocol and publication boundary](benchmarks/README.md)
-- [Medium draft](docs/blog/medium-article.md) · [LinkedIn draft](docs/blog/linkedin-post.md)
+[Protocol](benchmarks/decision-pilot/README.md) · [Adapter contract](docs/decisions-comparison.md) ·
+[Candidate scope](docs/evaluation-scope.md) · [Evidence handoff](docs/agent-handoff.md)
 
-Measure quality, p50/p95 latency, cloud charges/local resources, reliability and
-review effort per use case. Publish only validated public aggregates; missing data
-stays unavailable. Raw evidence and credentials stay local. Both articles are drafts.
+[Medium draft](docs/blog/medium-article.md) · [LinkedIn draft](docs/blog/linkedin-post.md)
+
+The earlier three-rubric offline previews remain available for reference; the
+`bench:*` commands implement the two current use cases. Probability routing uses a
+provisional 0.8 threshold, not a calibrated accuracy guarantee. Leads review all
+proposals. Human-reviewed, larger datasets and real execution studies are next.

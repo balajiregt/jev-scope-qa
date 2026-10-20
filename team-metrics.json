@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "runs": [
+    {
+      "schemaVersion": 1,
+      "protocol": "team-evaluation-v1",
+      "runId": "8edcfe60-9025-4696-88cd-93f9beed89f3",
+      "generatedAt": "2026-10-20T04:50:18.580Z",
+      "provider": "llamacpp",
+      "datasetKind": "synthetic-fixture",
+      "modelConfigHash": "333f777c48a2cee3815215b465f7dfc92c5f5705c06506466922e0b4a26e9a13",
+      "hardware": {
+        "platform": "darwin",
+        "arch": "arm64",
+        "ramBytes": 8589934592
+      },
+      "counts": {
+        "requirements": 2,
+        "tests": 3,
+        "runnableTests": 3,
+        "pairs": 6,
+        "attempted": 6,
+        "valid": 6,
+        "errors": 0,
+        "excluded": 0,
+        "notRun": 0
+      },
+      "coverage": {
+        "covered": 2,
+        "partial": 0,
+        "uncovered": 0,
+        "needsJudgment": 0,
+        "reviewed": 0
+      },
+      "smoke": {
+        "selectedTests": 2,
+        "mandatoryRequirements": 2,
+        "estimatedCoveredRequirements": 2,
+        "missingRequirements": 0,
+        "dependencyConflicts": 0,
+        "unknownDurationTests": 0,
+        "insufficientHistoryTests": 0,
+        "unreliableTests": 0,
+        "budgetMs": 300000,
+        "estimatedSerialMs": 4,
+        "withinBudget": true,
+        "approved": false,
+        "measuredSmokeMs": null,
+        "faultRetention": null
+      },
+      "performance": {
+        "evaluationWallMs": 44365.241125,
+        "clientPeakRssBytes": 40763392,
+        "modelPeakRssBytes": null,
+        "latencySamples": 6,
+        "p50Ms": 4880.827375000001,
+        "p95Ms": 18746.483375000003,
+        "inputTokens": 2465,
+        "outputTokens": 64
+      },
+      "quality": {
+        "reviewedLabels": 0,
+        "accuracy": null
+      }
+    }
+  ]
+}

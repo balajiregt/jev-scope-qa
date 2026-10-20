@@ -114,7 +114,7 @@ test('gold mismatch remains visible, including false supported finding', async (
   assert.equal(workflowSummary([check], rows, gold).matched, 0);
 });
 
-test('reviewer actions are append-only, bound to a run, and cannot alter Jev findings', () => {
+test('reviewer actions are append-only, bound to a run, and cannot alter Model findings', () => {
   const report = snapshot();
   const value = { runId: report.runId, checkId: checks[0].id, reviewer: 'Test reviewer', action: 'request_changes', note: 'Add assertion', at: new Date().toISOString() };
   const changed = appendDecision(report, value);

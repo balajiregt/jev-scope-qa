@@ -1,41 +1,29 @@
-A Playwright test can pass without verifying the acceptance criterion.
+Two decisions I want to improve in an agentic Playwright framework:
 
-“Viewers cannot delete customers” is not covered by checking that the Customers heading appears.
+1. Are our tests actually covering the requirements?
+2. Which tests should form the smoke suite from the full E2E inventory?
 
-I’m exploring that gap with Jev Scope QA. Here’s where the review layer fits:
+I’m shaping an experiment around local Laya versus OpenAI Decisions, using the existing agent + MD/skill review as a baseline.
 
-Epic + Jira + MD instructions + existing scenarios
-↓
-Coding agent proposes scenarios
-↓
-Jev: coverage gaps + duplicate candidates
-↓
-Lead agrees the plan → agent writes tests → Playwright runs
-↓
-Jev: required outcomes versus actual assertions
-↓
-Evidence-linked report → lead decision
+For requirement coverage:
+Acceptance criteria + test/helper assertions → covered, partial, uncovered or needs judgment.
 
-What goes into Jev?
+For smoke selection:
+Test behavior + critical journeys + dependencies + duration/reliability + runtime budget → include, exclude or needs judgment.
 
-State: requirements, scenarios and—for implementation review—test/helper code and supplied run evidence.
-Questions: instructions plus a defined answer type.
+Then validate the proposed suite as a whole. A short test is not automatically smoke-worthy, and excluding a flaky critical test can hide an essential journey.
 
-• Noul: probability of “yes” (called boolean in Vercel’s AI SDK).
-• Choice: a category plus its probabilities.
-• Score: a rating against described, ordered levels.
+What I want to measure:
+• Coverage: gap precision/recall and false-covered findings.
+• Smoke: critical journeys retained, missed journeys and runtime reduction.
+• Both: latency, cost, reliability and reviewer effort.
 
-This project uses Choice. For example: supported, assertion_gap, ambiguous_scope or insufficient_evidence.
+The lead reviews recommendations; Playwright executes tests. Several smoke suites may be valid—the goal is useful coverage within the budget.
 
-An illustrative JSON answer excerpt:
-{"choice":"assertion_gap","probabilities":{"supported":0.03,"assertion_gap":0.92,"ambiguous_scope":0.02,"insufficient_evidence":0.03}}
+Scope defined; Laya integration and these two workflows are next. No measured comparison claims yet.
 
-Our code validates the answer. Below 0.80 selected-choice probability goes to human judgment; otherwise, the finding determines the recommendation. Ambiguous scope and missing evidence still need a person. API errors remain errors.
+Project: https://github.com/balajiregt/playwright-decision-bench
 
-Jev reviews evidence. The existing harness executes tests. The lead decides—no automatic approvals or test deletion.
+Planned results destination: https://framework-benchmarks-balaji.netlify.app/
 
-Our September synthetic run matched 11 of 13 expected findings. Real Jev calls, illustrative browser-run records, and disagreements preserved. The threshold and results need broader validation.
-
-Code + offline sample report: https://github.com/balajiregt/jev-scope-qa
-
-#Playwright #TestAutomation #QualityEngineering #AgenticAI
+#Playwright #TestAutomation #QualityEngineering #LocalAI

@@ -1,5 +1,4 @@
-# Current evaluation task facts; file conventions live in harness.yml.
-name: scope-review-benchmark
-description: Evaluate synthetic scenario coverage with known positive, negative and neutral answers.
-inputs: fixtures/benchmark-inputs.json
-gold: fixtures/gold.json
+name: review-scaffold-preview
+description: Offline evidence and rubric preview; not a completed coverage or smoke-selection benchmark.
+inputs: examples/lead-review.json
+gold: fixtures/workflow-gold.json

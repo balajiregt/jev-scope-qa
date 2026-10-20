@@ -18,6 +18,5 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run review:preview
-      - run: npm run eval:preview
-      - run: npm run report:sample
       - run: npm run benchmark:crm:preview
+      - run: npm run compare:preview

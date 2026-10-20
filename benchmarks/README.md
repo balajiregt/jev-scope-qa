@@ -1,11 +1,27 @@
-# Synthetic CRM review benchmark (lead-review-v2)
+# Playwright Decision Bench — benchmark protocol
 
-`npm run benchmark:crm:preview` builds 16 evaluator requests from seven CRM work items without calling a model. `npm run benchmark:crm:live` evaluates them with the existing configured provider. `npm run benchmark:metrics` summarizes `artifacts/workflow-benchmark.json` separately from v1 findings.
+The intended comparison is local Laya versus OpenAI Decisions, with the existing
+agent + MD/skill workflow as a baseline. Two primary tasks: requirement-to-test
+coverage and smoke-suite selection. See [the experiment plan](../docs/evaluation-scope.md).
 
-The authored work items represent supported assertions, a UI-only denial check, a status-only export assertion, absent scenario coverage, incomplete helper evidence, duplicated denial scenarios and genuinely distinct authenticated/anonymous boundaries. They are synthetic evidence grounded in the companion CRM demo; they are not exported customer tests, a blind holdout or a production reliability study. Gold labels and rationale stay in `crm-gold.json` and never enter evaluator packets. Freeze input, gold, rubric and model before comparisons; add independently reviewed holdout examples before claiming generalization. Missing approved plans yield insufficient evidence at implementation review.
+## Current state
 
-Metrics distinguish issue detection precision/recall, missed issue rate, false alarm rate and exact finding classification. Raw findings and confidence-routed findings are separate. Failed/unrun expected issues count as missed in end-to-end recall when at least one response exists; coverage is always disclosed. Preview and runs with no evaluated responses yield null metrics. Timing aggregates only evaluated rows; token cost and human review remain null until supported measurements exist. Tests verify denominators, identity integrity and preview behavior.
+No measured comparison results. `crm-inputs.json` and `crm-gold.json` are authored
+synthetic scaffold fixtures. They exercise planning, duplication and assertion
+review; they are not the final coverage/smoke dataset. Gold remains local.
 
-Validation 2026-10-11: typecheck and local tests passed (31 passed with the local read-only harness adapter configured); CRM preview built 16 requests. Live provider returned HTTP 403 on the first request, so zero checks completed, one errored and 15 were not run. Model accuracy, precision/recall and cost are unavailable; this is a failed research run, not a successful evaluation result.
+```bash
+npm run benchmark:crm:preview
+```
 
-See [automatic dashboard publication](AUTOMATIC-PUBLICATION.md) for the canonical runner, CI, privacy controls and retry behaviour.
+This is offline and produces no model answers. Metrics utilities operate only on
+explicitly supplied reports. The project has no automatic live benchmark or
+publication command until verified adapters and the new protocol are ready.
+
+## Publishing
+
+Destination: [Framework Benchmarks](https://framework-benchmarks-balaji.netlify.app/).
+The dashboard lists this experiment as not yet measured. A future versioned feed
+will contain only sanitized aggregates with model/protocol identity, denominators,
+run conditions and failures. The current scope update publishes no model results.
+Historical provider outputs are not renamed or reused as evidence for this experiment.

@@ -76,7 +76,7 @@
     const detail = $('detail'); detail.replaceChildren(el('span', labels[check.stage], 'eyebrow'), el('h2', check.subject));
     detail.append(el('span', stateText(row), `pill ${row?.decision || ''}`));
     if (row?.status === 'evaluated') {
-      detail.append(el('p', `Jev finding: ${row.rawFinding} · Raw recommendation: ${row.rawDecision} · Routed: ${row.decision}`, 'muted'), el('p', row.note));
+      detail.append(el('p', `Model finding: ${row.rawFinding} · Raw recommendation: ${row.rawDecision} · Routed: ${row.decision}`, 'muted'), el('p', row.note));
       detail.append(el('p', `Routing: ${row.routingReason} · ${row.elapsedMs} ms · Selected finding probability ${(row.probability * 100).toFixed(0)}%`, 'muted'));
       const probabilities = el('div');
       for (const [key, probability] of Object.entries(row.probabilities)) {
@@ -84,7 +84,7 @@
         fill.style.width = `${probability * 100}%`; track.append(fill); p.append(el('span', key), track, el('span', `${Math.round(probability * 100)}%`)); probabilities.append(p);
       }
       detail.append(probabilities);
-    } else detail.append(el('p', report.mode === 'preview' ? 'Preview only. No Jev answer has been generated.' : `Operational status: ${row?.errorCode || 'not evaluated'}. This is not a neutral model judgment.`));
+    } else detail.append(el('p', report.mode === 'preview' ? 'Preview only. No Model answer has been generated.' : `Operational status: ${row?.errorCode || 'not evaluated'}. This is not a neutral model judgment.`));
     const criterion = item.criteria.find(c => c.id === check.criterionId);
     if (criterion) detail.append(el('p', `Criterion ${criterion.id} · source records: ${criterion.sourceIds.join(', ')}`, 'muted'));
     addSection(detail, 'Requirements and team context', node => {
@@ -109,7 +109,7 @@
       }
     });
     const gold = report.gold?.find(g => g.checkId === check.id);
-    if (gold && row?.status === 'evaluated' && gold.finding !== row.rawFinding) detail.append(el('p', `Benchmark mismatch: expected ${gold.finding}; Jev selected ${row.rawFinding}.`, 'negative'));
+    if (gold && row?.status === 'evaluated' && gold.finding !== row.rawFinding) detail.append(el('p', `Benchmark mismatch: expected ${gold.finding}; Model selected ${row.rawFinding}.`, 'negative'));
     if (gold) addSection(detail, 'Benchmark expectation — local only', node => { node.append(el('p', gold.finding), el('p', gold.rationale), el('p', 'Never included in the model request.', 'muted')); });
     detail.append(el('h3', 'Lead decision'));
     const decisions = report.decisions.filter(d => d.checkId === check.id);

@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { experimental_evaluate as evaluate } from 'ai';
 import { digest } from './context.js';
 import { gatewayErrorCode } from './errors.js';
 
@@ -80,7 +79,7 @@ export interface Check {
   request: ReturnType<typeof makeRequest>;
 }
 function makeRequest(stage: Stage, state: object) {
-  return { model: 'typesafe-ai/jev', state: JSON.stringify(state), questions: {
+  return { state: JSON.stringify(state), questions: {
     finding: { type: 'choice' as const, instructions: `${shared}\n${rubrics[stage]}`,
       criteria: Object.fromEntries(stageOutcomes[stage].map(key => [key, outcomes[key].note])) }
   } };
@@ -149,7 +148,7 @@ export function parseFinding(answers: unknown, stage: Stage) {
   }
   return parsed;
 }
-export async function runChecks(checks: Check[], minimum: number, evaluateFn: Evaluate = request => evaluate({ ...request, maxRetries: 0, abortSignal: AbortSignal.timeout(30_000) })) {
+export async function runChecks(checks: Check[], minimum: number, evaluateFn: Evaluate) {
   if (!Number.isFinite(minimum) || minimum < 0 || minimum > 1) throw new Error('Invalid probability threshold');
   const rows: Finding[] = [];
   let stopped = false;

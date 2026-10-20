@@ -34,7 +34,7 @@ export function benchmarkMetrics(report: WorkflowReport) {
       latencySamples:usableTimes.length,totalEvaluatedMs:usableTimes.length?usableTimes.reduce((a,b)=>a+b,0):null,
       tokens:null,cost:null,humanReviewMs:null}};
   };
-  return {schemaVersion:1,benchmark:'crm-jev-v2',mode:report.mode,rubricVersion:report.rubricVersion,runId:report.runId,inputHash:report.inputHash,
+  return {schemaVersion:1,benchmark:'crm-review-scaffold-v2',mode:report.mode,rubricVersion:report.rubricVersion,runId:report.runId,inputHash:report.inputHash,
     overall:calculated(),stages:Object.fromEntries(stages.map(s=>[s,calculated(s)])),
     limitations:['Gold labels remain evaluator-only. Authored synthetic CRM evidence is not production evidence.','Issue detection and exact finding classification are separate metrics.','Failed/unrun checks count as undetected expected issues in end-to-end recall; exact accuracy is conditional on evaluated rows.','Raw findings and confidence-routed findings are separate. Null means unmeasured. No cost or human-time inference.']};
 }

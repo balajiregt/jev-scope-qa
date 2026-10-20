@@ -1,113 +1,67 @@
-# The Playwright Test Passed. Did It Test the Requirement?
+# Can Decision Models Help Us Validate Coverage and Choose Smoke Tests?
 
-*Where Jev fits in an agentic testing framework—and how its JSON becomes a review finding.*
+*A Playwright experiment with local Laya and OpenAI Decisions.*
 
-A ticket says: “Viewers cannot delete customers.” An AI-generated test opens the page, asserts that the Customers heading is visible, and passes.
+As an E2E suite grows, two questions keep coming back: **are we testing the requirements, and which tests belong in the smoke suite?**
 
-The assertion succeeded. Access denial was never verified.
+These are the two use cases I want to evaluate. The approach is simple: define the task, apply both decision models to the same evidence, then measure whether their recommendations help.
 
-That is the problem I’m exploring with **Jev Scope QA**: help leads review whether generated scenarios and assertions address the supplied requirements.
+## 1. Validate test coverage against requirements
 
-## Where the Jev layer fits
+Give each model the acceptance criteria, test inventory and actual test/helper assertions. Ask it to classify coverage as **covered, partial, uncovered or needs judgment**.
+
+For example, “Viewers cannot delete customers and the data remains intact” is not covered by checking that the Customers heading appears. A test that asserts access denial but never verifies data preservation provides only partial coverage.
+
+The intended output is a requirement-to-test matrix with evidence links and remaining gaps. Multiple tests may collectively cover a criterion. Missing helpers or an incomplete inventory require judgment; a passing test alone does not prove coverage.
+
+Assertion adequacy belongs inside this use case: it helps establish whether a claimed requirement-to-test link is meaningful.
+
+## 2. Identify smoke tests from the full E2E suite
+
+Give each model the test behaviors, critical business journeys, dependencies, recent durations, reliability data and the team's smoke policy.
+
+Ask it to recommend **include, exclude or needs judgment** for each candidate. Then check the proposed suite as a whole: does it preserve mandatory journeys and dependencies within the execution budget?
+
+A short test is not automatically a smoke test. A flaky test covering a critical journey may need repair or replacement; simply excluding it can leave the smoke suite blind.
+
+Duplicate coverage matters here as a supporting consideration. The objective is a focused, feasible suite that retains the behavior the team considers essential.
+
+## How the comparison works
 
 ```text
-Epic + Jira criteria + MD instructions + existing scenarios
-                         ↓
-        Coding agent proposes test scenarios
-                         ↓
-     JEV REVIEW 1: coverage gaps + duplicate candidates
-                         ↓
-              Lead agrees the plan
-                         ↓
-    Agent writes tests → Playwright executes them
-                         ↓
-     JEV REVIEW 2: requirements versus actual assertions
-                         ↓
-        Evidence-linked report → lead decision
+Requirements + test evidence + smoke policy
+                    ↓
+        Same assessment task and rubric
+                    ↓
+        Local Laya | OpenAI Decisions
+                    ↓
+    Coverage matrix or smoke-suite proposal
+                    ↓
+      Quality + performance measurements
+                    ↓
+               Lead review
 ```
 
-Jev’s scope is specific:
+The existing agent + MD/skill review is the baseline. Our local Ollama/Qwen model can support that baseline; Laya uses its own checkpoints and needs a verified serving setup. [Laya project](https://github.com/NandhaKishorM/laya)
 
-- **Coverage:** does the inventory exercise the required roles, actions and outcomes?
-- **Duplication:** do two scenarios test the same behavior, or do role/boundary differences justify both?
-- **Assertion quality:** would the supplied assertions detect a violation of the criterion?
+Each model receives bounded evidence and typed Choice questions. Provider responses are validated and normalized; low certainty or missing evidence goes to human review. Local code checks suite constraints. The lead approves changes, and Playwright executes the tests.
 
-The existing harness still generates and runs tests. Jev supplies advisory findings; the lead approves, requests changes or clarifies scope. Today, the handoff is an explicit JSON snapshot, not automatic Jira ingestion.
+## What we will measure
 
-## What do we send to Jev?
+| Use case | Quality and value |
+|---|---|
+| Requirement coverage | Gap precision/recall, false-covered findings, label accuracy and reviewer effort |
+| Smoke selection | Critical journeys retained, missed journeys, dependency/budget violations and measured runtime reduction |
+| Both | Successful-call p50/p95 latency, cost, local resources, errors and repeated-run consistency |
 
-Two things: **state** (the evidence) and **typed questions** (what to evaluate).
+There may be several valid smoke suites, so matching one reference list is not enough. We will measure failure-detection retention only by executing against diagnosed regressions or controlled faults.
 
-State contains the relevant requirements and scenario inventory. Implementation reviews also include the agreed plan, test/helper code and supplied run results. Expected benchmark answers and reviewer decisions stay out of the request.
+Use held-out work items and repeat runs. Evaluate untuned Laya first; any fine-tuned variant receives a separate result. Neither a high probability nor agreement between models establishes correctness.
 
-Three question types useful here:
+**Current status:** the scope and offline scaffold are ready. Laya/OpenAI integration,
+the coverage matrix and smoke-selection workflow are planned. There are no measured
+model-comparison results yet.
 
-| Type | Meaning | Possible QA question |
-| --- | --- | --- |
-| **Noul** | Probability that a yes/no proposition is true | “Is the required denial assertion present?” |
-| **Choice** | Select a defined category, with probabilities | “Supported, assertion gap, ambiguous scope or missing evidence?” |
-| **Score** | Rate against ordered, described levels | “How complete is this scenario against the rubric?” |
+I’ll publish the measured results on [Framework Benchmarks](https://framework-benchmarks-balaji.netlify.app/), with separate coverage and smoke-selection comparisons, sample sizes and run conditions. The new experiment’s results are not published yet.
 
-[Noul](https://docs.typesafe.ai/primitives/noul), [Choice](https://docs.typesafe.ai/primitives/choice) and [Score](https://docs.typesafe.ai/primitives/score) are question types—not the ticket data itself. In Vercel’s AI SDK interface, the yes/no type is `boolean`; native TypeSafe calls it `noul`. **This project uses Choice only.** [API formats](https://vercel.com/docs/ai-gateway/modalities/decision)
-
-Here is a shortened implementation-review request:
-
-```json
-{
-  "model": "typesafe-ai/jev",
-  "state": "Criterion: viewer sees Access denied. Complete supplied test: opens the restricted URL and only asserts the Customers heading.",
-  "questions": {
-    "finding": {
-      "type": "choice",
-      "instructions": "Compare actual assertions with the criterion.",
-      "criteria": {
-        "supported": "Assertions verify the required outcome",
-        "assertion_gap": "A required assertion is missing",
-        "ambiguous_scope": "The requirement is unclear or conflicting",
-        "insufficient_evidence": "Necessary evidence is unavailable"
-      }
-    }
-  }
-}
-```
-
-The real rubric includes additional rules and full evidence. Our pinned `ai@7.0.109` uses `experimental_evaluate`; newer Vercel documentation shows `experimental_decide`. Use the API matching your installed SDK.
-
-## What comes back—and what do we do?
-
-Illustrative answer excerpt, not a measured response:
-
-```json
-{
-  "answers": {
-    "finding": {
-      "type": "choice",
-      "choice": "assertion_gap",
-      "probabilities": {
-        "supported": 0.03,
-        "assertion_gap": 0.92,
-        "ambiguous_scope": 0.02,
-        "insufficient_evidence": 0.03
-      }
-    }
-  }
-}
-```
-
-Our code validates the response and reads `probabilities[choice]`:
-
-- **Below 0.80:** route to human judgment, retaining the raw finding.
-- **Otherwise:** supported/distinct → positive; gap/duplicate candidate → flagged; ambiguous scope/missing evidence → human judgment.
-- **API or schema error:** record an operational failure, never a coverage verdict.
-
-So this example becomes a flagged assertion gap with a local explanatory note. It does not automatically fail the browser test or approve a release. The 0.80 threshold is provisional—not calibrated correctness or TypeSafe’s separate confidence field.
-
-## What the experiment showed
-
-Our September 23 synthetic run completed **13 live Jev checks; 11 matched the expected finding labels**. It detected the ineffective passing test, missing editor coverage and a duplicate pair. Two disagreements remain visible.
-
-![Recorded review-stage outcomes](../assets/review-stages.png)
-
-The Jev calls were real; the example browser-run records were illustrative. This is an exploratory result, not production validation.
-
-[Explore the code, evidence and offline sample report](https://github.com/balajiregt/jev-scope-qa).
+[Project](https://github.com/balajiregt/playwright-decision-bench).

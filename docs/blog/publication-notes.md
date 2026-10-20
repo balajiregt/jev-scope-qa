@@ -1,47 +1,35 @@
-# Publication package
+# Publication package — October 20, 2026
 
-Status: article and social post are drafts. Neither has been published by this task.
+Status: Medium article and LinkedIn post remain unpublished drafts.
 
-## Medium
+## Editorial scope
 
-- Title: The Playwright Test Passed. Did It Test the Requirement?
-- Subtitle: Where Jev fits in an agentic testing framework—and how its JSON becomes a review finding.
-- Article: `medium-article.md`.
-- Suggested tags: Playwright, Test Automation, Quality Engineering, AI, Software Testing.
-- Upload `../assets/review-stages.png` at the image position. Alt text and caption are in the article.
-- The text flow diagram works as plain code. `../assets/review-workflow.png` is an optional image replacement showing the report's four workflow stages.
-- Recreate Markdown links and code blocks if the editor does not preserve pasted formatting.
-- Confirm the first-person wording reflects your intended voice and that the 11/13 result is clearly labeled synthetic.
+Title: **Can Decision Models Help Us Validate Coverage and Choose Smoke Tests?**
 
-## LinkedIn
+Both drafts follow: identify suitable review candidates → apply local Laya and
+OpenAI Decisions → measure quality, performance and practical value per candidate.
+The primary use cases are requirement-to-test coverage validation and smoke-suite
+selection from the full E2E inventory. Assertion adequacy supports coverage;
+duplication supports suite selection. They retain the existing agent + MD/skill
+review as the baseline for added value.
 
-`linkedin-post.md` is ready as a repository-first post and contains no missing-link placeholder.
-After the Medium article is published, insert this sentence before the repository link:
+- `medium-article.md`: concise article with candidate table, experiment flow,
+  concrete examples and measurement plan.
+- `linkedin-post.md`: short project introduction; no measured superiority claim.
+- `../evaluation-scope.md`: detailed protocol and implemented-versus-planned inventory.
 
-`I wrote about the idea, the workflow and the failures here: <actual published Medium article URL>`
+## Publication checks
 
-Replace the bracketed instruction with the real URL; do not publish a placeholder.
-Use the same stage-graph image if an image is desired. The code URL is usable
-independently of Medium publication.
+- Repository: https://github.com/balajiregt/playwright-decision-bench.
+- Results destination: https://framework-benchmarks-balaji.netlify.app/. The new
+  experiment is not yet measured; no model quality or speed claim is established.
+- The supplied Laya weights and upstream project are confirmed. Local inspection
+  found Ollama/Qwen3:4b; Laya needs its own verified runtime and checkpoint.
+- Coverage matrices, smoke selection and live provider adapters remain pending.
+- Runtime reduction and failure-detection retention need actual execution evidence.
+- Do not reuse retired results or graphs under another model's name.
+- Keep model/checkpoint, protocol, sample counts, hardware and error coverage visible.
+- Publish only reviewed aggregate data; keep raw evidence and credentials local.
 
-## Claim boundaries
-
-- Measured: 13 completed live Jev requests; 11 exact finding-label matches.
-- Measured: two disagreements, with the raw finding and local routing retained.
-- Synthetic: input tickets, scenarios, source examples and browser execution records.
-- Not established: production accuracy, calibrated probabilities, cost or latency
-  superiority, reviewer time savings, or superiority over a skill-driven agent.
-- Implemented: explicit JSON handoff and local, per-check reviewer decisions.
-- Not implemented: automatic Jira ingestion or Playwright-result import.
-
-No license is selected by this package. Choose one explicitly if you want to grant
-reuse rights beyond the platform's default terms. The article does not describe
-the repository as licensed open source.
-
-## Updated editorial scope
-
-Both drafts now focus on the framework flow, Jev review boundaries, state versus
-typed questions, Noul/boolean naming, Choice response JSON and local routing.
-JSON response numbers are explicitly illustrative. The September benchmark remains
-a dated observation. Keep the pinned-SDK note in the Medium article; current vendor
-documentation uses a newer function name. Both remain drafts per the author’s request.
+Both articles remain drafts. Once measurements exist, add a small per-use-case
+results table and a direct link to the relevant dashboard view.

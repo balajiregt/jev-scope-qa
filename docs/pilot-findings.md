@@ -37,3 +37,7 @@ Actual Playwright wall-clock reduction, fault-detection retention, reviewer effo
 energy and hardware operating cost remain unavailable. Next: independently review
 labels, improve prompts or tune only on development data, then evaluate on new
 held-out tickets. Keep this first untuned result as the baseline.
+
+Follow-up: [accuracy diagnosis](accuracy-diagnosis.md) tests development-only
+ablations. It preserves these original results and does not establish a general
+model adoption verdict.

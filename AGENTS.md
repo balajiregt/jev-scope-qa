@@ -30,3 +30,13 @@ must not use network APIs. Documentation-only changes need link/reference checks
 The public destination is framework-benchmarks-balaji.netlify.app. The result feed is benchmark-results/decision-bench.json. Keep raw reports, prompts, code, keys and reviewer notes private.
 Do not reuse retired provider results under a new model name. Medium/LinkedIn
 remain drafts. Report changed files, verification and any skipped gates.
+
+## Reusable team CLI
+
+The user-authorized `qa` commands accept explicit external repository and requirements
+paths. They collect using the target repository's own Playwright runner. Keep source
+and requirement evidence local; inference is loopback-only. `qa record` explicitly
+runs the suite. `qa run` only lists tests and evaluates evidence. `qa publish` validates
+the closed shared/team-metrics.mjs contract before any GitHub mutation. Do not widen
+that public schema to include text, paths, IDs, raw responses or source. Team estimates
+are unreviewed and must not be represented as measured model accuracy or approval.

@@ -22,6 +22,25 @@ Requirements + test/assertion evidence + smoke policy
 The agent creates tests; Playwright runs them. This layer reviews supplied evidence
 and proposes a suite. It does not change tags, delete tests or approve releases.
 
+## Use it with your team's repository
+
+The local team CLI imports **JSON, XLS, XLSX, DOCX and DOC** requirements, discovers
+Playwright tests and local helpers, runs **Laya or Qwen (Ollama / llama.cpp)**, and
+produces a private HTML report, coverage CSV and draft smoke proposal. It exports
+only validated aggregate metrics for the dashboard.
+
+```bash
+npm run qa -- init --repo /path/to/playwright-repo --requirements /path/to/requirements.xlsx
+npm run qa -- import
+npm run qa -- run
+```
+
+Follow the [team quickstart](docs/team-quickstart.md) for installation, file templates,
+execution history, provider configuration and metrics publication. This is an
+experimental review assistant; model findings require lead review. The synthetic
+pilot below remains separate from team evaluations. See the [integration checks and
+known limits](docs/team-validation.md).
+
 ## What is implemented
 
 - Coverage: **covered / partial / uncovered / needs_judgment**, with references to
@@ -48,6 +67,8 @@ OpenAI has no valid measurements; direct credentials are not configured.
 Actual Playwright runtime reduction, fault-detection retention, hardware operating
 cost and human review time remain **unmeasured**. Fixture duration values are authored
 estimates. See [pilot findings](docs/pilot-findings.md).
+The [accuracy diagnosis](docs/accuracy-diagnosis.md) separates prompt/context effects,
+evidence weaknesses and unresolved model limitations before adoption.
 
 ## Run locally
 

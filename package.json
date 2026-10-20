@@ -19,7 +19,8 @@
     "bench:preview": "node --import tsx src/bench-cli.ts preview",
     "bench:preflight": "node --import tsx src/bench-cli.ts preflight",
     "bench:live": "node --import tsx src/bench-cli.ts live",
-    "bench:report": "node --import tsx src/bench-refresh.ts"
+    "bench:report": "node --import tsx src/bench-refresh.ts",
+    "qa": "node --import tsx src/team-cli.ts"
   },
   "dependencies": {
     "yaml": "^2.9.0",

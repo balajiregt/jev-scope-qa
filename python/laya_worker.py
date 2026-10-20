@@ -1,4 +1,4 @@
-"""Line-delimited local inference. Only synthetic packets are passed by the pilot CLI."""
+"""Line-delimited local inference for pilot packets and user-selected repository evidence."""
 import json, os, sys, time, resource, platform
 from contextlib import redirect_stdout
 

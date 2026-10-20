@@ -61,10 +61,10 @@ export async function qwen(p:Packet):Promise<Answer>{
 export class LayaWorker {
   child:ChildProcessWithoutNullStreams; private waiting?:{resolve:(v:any)=>void;reject:(e:Error)=>void;timer:NodeJS.Timeout};
   ready:Promise<any>; metadata:any;
-  constructor(){
-    this.child=spawn(path.join(ROOT,'.venv/bin/python'),[path.join(ROOT,'python/laya_worker.py')],{
+  constructor(options: {python?:string;device?:string} = {}){
+    this.child=spawn(options.python ?? path.join(ROOT,'.venv/bin/python'),[path.join(ROOT,'python/laya_worker.py')],{
       cwd:ROOT,env:{PATH:process.env.PATH,HOME:process.env.HOME,HF_HOME:path.join(ROOT,'artifacts/hf'),
-        LAYA_REVISION:layaRevision,LAYA_DEVICE:process.env.LAYA_DEVICE??'mps',TOKENIZERS_PARALLELISM:'false'},stdio:'pipe'});
+        LAYA_REVISION:layaRevision,LAYA_DEVICE:options.device??process.env.LAYA_DEVICE??'mps',TOKENIZERS_PARALLELISM:'false'},stdio:'pipe'});
     this.child.stderr.resume(); // Provider diagnostic strings are deliberately not copied to reports.
     this.ready=this.next(240000);
     createInterface({input:this.child.stdout}).on('line',line=>{try{this.finish(JSON.parse(line));}catch{this.fail(new ProviderError('invalid_laya_json'));}});

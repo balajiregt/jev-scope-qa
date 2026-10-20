@@ -13,3 +13,7 @@ benchmarks/dashboard/__pycache__/
 .venv/
 __pycache__/
 *.pyc
+
+decision-bench.config.local.json
+.playwright-cli/
+output/

@@ -20,7 +20,10 @@
     "bench:preflight": "node --import tsx src/bench-cli.ts preflight",
     "bench:live": "node --import tsx src/bench-cli.ts live",
     "bench:report": "node --import tsx src/bench-refresh.ts",
-    "qa": "node --import tsx src/team-cli.ts"
+    "qa": "node --import tsx src/team-cli.ts",
+    "security:staged": "node scripts/security-gate.mjs",
+    "security:hooks": "node scripts/install-security-hook.mjs",
+    "security:check": "python3 scripts/security_audit.py"
   },
   "dependencies": {
     "yaml": "^2.9.0",

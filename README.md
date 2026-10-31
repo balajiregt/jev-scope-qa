@@ -1,3 +1,21 @@
+# Archived: Playwright Decision Bench
+
+This repository is retired and retained as read-only history. Active test
+authoring, acceptance assessment and behavioral-mutation tools now belong to
+[Playwright Agent](https://github.com/balajiregt/playwright-agent), in its
+[internal quality module](https://github.com/balajiregt/playwright-agent/tree/main/quality).
+
+Use the [agent setup guide](https://github.com/balajiregt/playwright-agent/blob/main/docs/playwright-agent.md)
+for new work. Source history is also preserved in the parent repository's
+`archive/playwright-decision-bench-20261031` branch. Existing result branches
+remain readable for historical provenance; they are not an active publication
+workflow. The standalone QA dashboard viewer and public Analyses section are
+retired. Local reports remain part of the owning Playwright Agent workflow.
+
+The original README below describes the historical implementation.
+
+---
+
 # Playwright Decision Bench
 
 Compare **direct TypeSafe Jev** with **local Laya** for requirement coverage and

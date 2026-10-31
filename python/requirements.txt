@@ -1,4 +1,4 @@
-laya==0.4.12
+laya==0.4.16
 # Keep the inference runtime isolated and reproducible; model weights stay unchanged.
 torch==2.15.0
 transformers==5.22.1
